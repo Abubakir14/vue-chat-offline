@@ -1,17 +1,12 @@
 <template>
   <div id="app" :class="{ 'dark-mode': darkMode }">
-    <ChatRoom :darkMode="darkMode" />
+    <router-view /> <!-- Здесь будут отображаться маршрутизируемые компоненты -->
   </div>
 </template>
 
 <script>
-import ChatRoom from './components/ChatRoom.vue'
-
 export default {
   name: 'App',
-  components: {
-    ChatRoom
-  },
   data() {
     return {
       darkMode: false
@@ -21,7 +16,7 @@ export default {
 </script>
 
 <style>
-body{
+body {
   height: 100%;
   margin: 0;
 }
