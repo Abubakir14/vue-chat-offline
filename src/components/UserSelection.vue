@@ -1,7 +1,8 @@
+<!-- UserSelection.vue -->
 <template>
   <div class="user-selection">
-    <h1>Select User:</h1>
-    <div v-for="(user, index) in users" :key="index" @click="selectUser(user)">
+    <h1>Select User</h1>
+    <div v-for="(user, index) in users" :key="index" @click="selectUser(user)" class="user">
       {{ user.name }}
     </div>
   </div>
@@ -21,15 +22,52 @@ export default {
   },
   methods: {
     selectUser(user) {
-      // Здесь вы можете сохранить выбранного пользователя в localStorage или Vuex
-      // Затем перенаправьте пользователя на страницу чата
-       localStorage.setItem('selectedUser', JSON.stringify(user));
-      this.$router.push('/chat');
+      localStorage.setItem('selectedUser', JSON.stringify(user));
+      this.$router.push({ path: '/chat' });
     }
   }
 }
 </script>
 
 <style scoped>
-/* Стили для компонента выбора пользователя */
+.user-selection{
+  display: flex;
+  height: 100vh;
+  width: 100vh;
+  margin: auto;
+  flex-direction: column;
+}
+.user-selection h1{
+  justify-content: center;
+  padding: 15px;
+  border: 2px solid  #769de6;
+  border-radius: 10px;
+  background-color:  rgb(124, 122, 122);
+  margin: 30px auto 0px auto;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.user{
+  width: 80%;
+  padding: 15px;
+  border: 2px solid  #769de6;
+  border-radius: 10px;
+  background-color:  rgb(124, 122, 122);
+  margin: 0px auto 0px auto;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.user:hover{
+  width: 80%;
+  padding: 15px;
+  transition: 2s;
+  border: 2px solid  #769de6;
+  border-radius: 10px;
+  background-color:#0056b3;
+    margin: 0px auto 0px auto;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
 </style>

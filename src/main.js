@@ -11,7 +11,7 @@ Vue.use(VueRouter);
 const routes = [
   { path: "/", redirect: "/home" },
   { path: "/home", component: UserSelection },
-  { path: "/:name", component: ChatRoom, props: true },
+  { path: "/chat", name: "chat", component: ChatRoom, props: true },
 ];
 
 const router = new VueRouter({

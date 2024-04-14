@@ -1,3 +1,4 @@
+<!-- ChatRoom.vue -->
 <template>
   <div class="chat-container" :class="{ 'dark-mode': darkMode }">
     <div class="users">
@@ -14,7 +15,7 @@
     </div>
     <div class="messages-container">
       <div class="messages">
-        <div v-for="(message, index) in messages" :key="index" class="message">
+        <div v-for="(message, index) in selectedUserMessages" :key="index" class="message">
           {{ message.text }}
         </div>
       </div>
@@ -34,25 +35,84 @@ export default {
   },
   data() {
     return {
-      messages: [],
       newMessage: '',
-      selectedUser: null, // Индекс выбранного пользователя
+      selectedUser: null,
       users: [
-        { name: 'Jack', status: '*out*' },
-        { name: 'BIBER', status: '*meter*' },
-        { name: 'NEDO', status: '*mimo*' }
+        { name: 'Jack', status: '*out*', messages: [] },
+        { name: 'BIBER', status: '*meter*', messages: [] },
+        { name: 'NEDO', status: '*mimo*', messages: [] }
       ]
     };
+  },
+  computed: {
+    selectedUserMessages() {
+      if (this.selectedUser !== null) {
+        return this.users[this.selectedUser].messages;
+      } else {
+        return [];
+      }
+    }
   },
   methods: {
     sendMessage() {
       if (this.newMessage.trim() !== '') {
-        this.messages.push({ text: this.newMessage });
+        const message = { text: this.newMessage };
+        const user = this.users[this.selectedUser];
+        user.messages.push(message);
+        this.saveMessageToStorage(user.name, message);
         this.newMessage = '';
       }
     },
-    selectUser(index) { // Обработчик нажатия на пользователя
+    selectUser(index) {
       this.selectedUser = index;
+    },
+    saveMessageToStorage(userName, message) {
+      const messages = JSON.parse(localStorage.getItem(userName)) || [];
+      messages.push(message);
+      localStorage.setItem(userName, JSON.stringify(messages));
+    },
+    handleStorageEvent(event) {
+      const { key, newValue } = event;
+      if (key && newValue) {
+        const userName = this.users[this.selectedUser]?.name;
+        if (userName && key === userName) {
+          const newMessages = JSON.parse(newValue);
+          this.users[this.selectedUser].messages = newMessages;
+        }
+      }
+    }
+  },
+  mounted() {
+    window.addEventListener('storage', this.handleStorageEvent);
+    const storedUser = JSON.parse(localStorage.getItem('selectedUser'));
+    if (storedUser) {
+      const index = this.users.findIndex(user => user.name === storedUser.name);
+      if (index !== -1) {
+        this.selectedUser = index;
+      } else {
+        this.$router.push({ path: '/home' });
+      }
+    } else {
+      this.$router.push({ path: '/home' });
+    }
+  },
+  beforeUnmount() {
+    window.removeEventListener('storage', this.handleStorageEvent);
+  },
+  created() {
+    const userName = this.users[this.selectedUser]?.name;
+    if (userName) {
+      const storedMessages = JSON.parse(localStorage.getItem(userName)) || [];
+      this.users[this.selectedUser].messages.push(...storedMessages);
+    }
+  },
+  watch: {
+    selectedUser(newIndex) {
+      const userName = this.users[newIndex]?.name;
+      if (userName) {
+        const storedMessages = JSON.parse(localStorage.getItem(userName)) || [];
+        this.users[newIndex].messages = storedMessages;
+      }
     }
   }
 }
@@ -174,4 +234,5 @@ export default {
 .selected {
   background-color: #0056b3; 
 }
+
 </style>
