@@ -1,4 +1,3 @@
-<!-- UserSelection.vue -->
 <template>
   <div class="user-selection">
     <h1>Select User</h1>
@@ -22,6 +21,10 @@ export default {
   },
   methods: {
     selectUser(user) {
+      // Исправленная часть: проверяем, существует ли метод commit в $store
+      if (this.$store && this.$store.commit) {
+        this.$store.commit('setSelectedUser', user);
+      }
       localStorage.setItem('selectedUser', JSON.stringify(user));
       this.$router.push({ path: '/chat' });
     }

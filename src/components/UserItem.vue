@@ -1,3 +1,4 @@
+<!-- UserItem.vue -->
 <template>
   <div 
     class="user"

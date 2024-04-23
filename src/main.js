@@ -19,6 +19,18 @@ const router = new VueRouter({
   routes,
 });
 
+// Добавляем логику для сохранения пользователей при первом запуске
+const users = [
+  { name: "Jack", status: "*out*", messages: [] },
+  { name: "BIBER", status: "*meter*", messages: [] },
+  { name: "NEDO", status: "*mimo*", messages: [] },
+  { name: "Manu", status: "*mimo*", messages: [] },
+];
+
+if (!localStorage.getItem("users")) {
+  localStorage.setItem("users", JSON.stringify(users));
+}
+
 new Vue({
   router,
   render: (h) => h(App),

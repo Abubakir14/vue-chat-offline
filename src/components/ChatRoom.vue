@@ -1,9 +1,8 @@
-<!-- ChatRoom.vue -->
 <template>
   <div class="chat-container" :class="{ 'dark-mode': darkMode }">
     <div class="users">
       <div 
-        v-for="(user, index) in users" 
+        v-for="(user, index) in filteredUsers" 
         :key="index"
         class="user"
         @click="selectUser(index)" 
@@ -37,14 +36,14 @@ export default {
     return {
       newMessage: '',
       selectedUser: null,
-      users: [
-        { name: 'Jack', status: '*out*', messages: [] },
-        { name: 'BIBER', status: '*meter*', messages: [] },
-        { name: 'NEDO', status: '*mimo*', messages: [] }
-      ]
+      users: []
     };
   },
   computed: {
+    filteredUsers() {
+      if (this.selectedUser === null) return this.users;
+      return this.users.filter((user, index) => index !== this.selectedUser);
+    },
     selectedUserMessages() {
       if (this.selectedUser !== null) {
         return this.users[this.selectedUser].messages;
@@ -83,18 +82,20 @@ export default {
     }
   },
   mounted() {
-    window.addEventListener('storage', this.handleStorageEvent);
     const storedUser = JSON.parse(localStorage.getItem('selectedUser'));
     if (storedUser) {
-      const index = this.users.findIndex(user => user.name === storedUser.name);
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const index = users.findIndex(user => user.name === storedUser.name);
       if (index !== -1) {
         this.selectedUser = index;
       } else {
         this.$router.push({ path: '/home' });
       }
+      this.users = users;
     } else {
       this.$router.push({ path: '/home' });
     }
+    window.addEventListener('storage', this.handleStorageEvent);
   },
   beforeUnmount() {
     window.removeEventListener('storage', this.handleStorageEvent);

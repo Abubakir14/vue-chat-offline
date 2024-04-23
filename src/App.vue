@@ -1,6 +1,7 @@
+<!-- App.vue -->
 <template>
   <div id="app" :class="{ 'dark-mode': darkMode }">
-    <router-view /> <!-- Здесь будут отображаться маршрутизируемые компоненты -->
+    <router-view />
   </div>
 </template>
 
