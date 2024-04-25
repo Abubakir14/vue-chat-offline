@@ -15,7 +15,8 @@ export default {
       users: [
         { name: 'Jack', status: '*out*' },
         { name: 'BIBER', status: '*meter*' },
-        { name: 'NEDO', status: '*mimo*' }
+        { name: 'NEDO', status: '*mimo*' },
+        { name: "Manu", status: "*mimo*", messages: [] },
       ]
     };
   },
